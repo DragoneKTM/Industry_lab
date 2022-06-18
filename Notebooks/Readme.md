@@ -2,7 +2,7 @@
 - Lo scopo di questa parte è caricare i dati originali, esplorarli, visualizzarli e prepararli
 (es. cleaning e features engineering) per le fasi successive.
 
-##PARTE 2 Training
+## PARTE 2 Training
 - Lo scopo di questa parte è di selezionare la miglior famiglia di modelli e i
 corrispondenti iper-parametri, per poi addestrare il modello da usare nelle fasi
 successive.
