@@ -1,0 +1,2 @@
+"i nomi e le versioni delle librerie/packages utilizzate nel progetto devono essere riportare all’interno del report
+scritto e in un file"
