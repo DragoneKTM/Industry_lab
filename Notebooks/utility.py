@@ -130,7 +130,7 @@ def predict_image(img, model):
 def localize_anom(img, diff):
     anomaly = False
     # Threshold to make the image only white and black (so higlight the anomalies in white)
-    ret, th = cv.threshold(diff, 150, 255, cv.THRESH_BINARY)
+    ret, th = cv.threshold(diff, 140, 255, cv.THRESH_BINARY)
     # Find the countours of the anomalies
     cnts, _ = cv.findContours(th, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
     # For every anomaly, draw the bounding box
