@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import os
 from skimage.metrics import structural_similarity
 
+
+# ------------------ Preprocessing functions ------------------
+
+
+
 # Function to crop image 
 def crop(img, mask=False):
     #gaussian filter
@@ -25,7 +30,6 @@ def crop(img, mask=False):
     return img[y-border:y+h+border, x-border:x+w+border]
 
 
-
 # Function to scale pixel values from 0..255 to 0..1
 def scale_pixels(img, scale_range=(0, 1)):
     return img.astype('float32') / 255.
@@ -34,6 +38,23 @@ def scale_pixels(img, scale_range=(0, 1)):
 # Function to resize images
 def resize(img, size=(1024, 1024)):
     return cv.resize(img, size)
+
+
+# Function to divide images into smaller parts
+def split_patches(img, n_patches=16):
+    imgs_list = []
+    dim = int(img.shape[0]//(16**(1/2)))
+    for i in range(0, n_patches):
+        x = int(dim*(i%(16**(1/2))))
+        y = int(dim*(i//(16**(1/2))))
+        imgs_list.append(img[y:y+dim, x:x+dim])
+    return imgs_list
+
+
+
+# ------------------ Data augmentation functions ------------------
+
+
 
 
 # Function to rotate an image
@@ -53,26 +74,12 @@ def brightness_contrast(img, brightness, contrast):
     return img
 
 
-# Function to divide images into smaller parts
-def split_patches(img, n_patches=16):
-    imgs_list = []
-    dim = int(img.shape[0]//(16**(1/2)))
-    for i in range(0, n_patches):
-        x = int(dim*(i%(16**(1/2))))
-        y = int(dim*(i//(16**(1/2))))
-        imgs_list.append(img[y:y+dim, x:x+dim])
-    return imgs_list
 
 
-# Function to summarize history for loss
-def plot_hist(hist, title):
-    plt.plot(hist.history['loss'])
-    plt.plot(hist.history['val_loss'])
-    plt.title("LOSS " + title)
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
-    plt.legend(['train', 'validation'], loc='upper left')
-    plt.show()
+# ------------------ Load data functions ------------------
+
+
+
    
     
 # Funtion to load images (all without defects)
@@ -85,17 +92,13 @@ def data_loader(dir='./', scale=False):
         imgs.append(image)
     return imgs
 
-def calc_image_diff(true_img, rec_img):    
-    # All values between 0 and 1
-    rec_img[np.where((rec_img > [1]))] = 1
-    rec_img[np.where((rec_img < [0]))] = 0
-    # Calculate the difference between the original image and the reconstructed one
-    diff = cv.absdiff(true_img, rec_img)
-    # Scale values from 0..1 to 0..255 (required for opencv functions)
-    diff = (diff*255).astype('uint8')
-    # Calculate the SSIM similiarity score between the 2 slice
-    score, _ = structural_similarity(true_img, rec_img, full=True)
-    return diff, score
+
+
+
+# ------------------ Prediction functions ------------------
+
+
+
 
 
 def predict_image(img, model):
